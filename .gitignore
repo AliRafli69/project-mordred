@@ -1,0 +1,38 @@
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+*.local.json
+*.local.yaml
+*.local.yml
+
+# Private inputs, generated state, logs, and model weights
+/data/
+/private-documents/
+/models/
+/logs/
+/backups/
+/screenshots/
+*.gguf
+*.safetensors
+*.log
+*.postman_environment.json
+
+# Development artifacts
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+node_modules/
+dist/
+build/
+.DS_Store
+Thumbs.db
