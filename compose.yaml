@@ -6,9 +6,11 @@ services:
     image: mordred-backend:local
     restart: unless-stopped
     init: true
+    env_file:
+      - .env
 
     ports:
-      - "127.0.0.1:8000:8000"
+      - "${MORDRED_BIND_ADDRESS:-127.0.0.1}:${MORDRED_BIND_PORT:-8000}:8000"
 
     read_only: true
 
@@ -30,6 +32,13 @@ services:
         max-size: "10m"
         max-file: "3"
 
+    secrets:
+      - mordred_private_prompt
+
 networks:
   mordred-services:
     driver: bridge
+
+secrets:
+  mordred_private_prompt:
+    file: ./prompts/system_prompt.private.txt

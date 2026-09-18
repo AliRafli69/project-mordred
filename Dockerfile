@@ -18,6 +18,8 @@ RUN python -m pip install --no-cache-dir -r requirements.txt
 
 COPY --chown=mordred:mordred app ./app
 
+COPY --chown=mordred:mordred prompts/system_prompt.txt ./prompts/system_prompt.txt
+
 USER mordred
 
 EXPOSE 8000

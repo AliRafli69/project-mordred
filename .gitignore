@@ -15,6 +15,7 @@ id_ed25519
 
 # Private inputs, generated state, logs, and model weights
 /data/
+/prompts/system_prompt.private.txt
 /private-documents/
 /models/
 /logs/
