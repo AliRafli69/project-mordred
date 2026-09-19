@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     lm_studio_api_key: SecretStr
     lm_studio_model: str = Field(min_length=1)
 
+    chat_temperature: float = Field(default=0.7, ge=0.0, le=2.0)
+    chat_max_output_tokens: int = Field(default=1024, ge=64, le=4096)
+
     connect_timeout_seconds: float = Field(default=3.0, gt=0, le=30)
     read_timeout_seconds: float = Field(default=90.0, gt=0, le=600)
 

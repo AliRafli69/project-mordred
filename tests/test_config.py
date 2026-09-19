@@ -14,6 +14,9 @@ def test_settings_validate_and_mask_secrets() -> None:
     assert settings.connect_timeout_seconds == 3.0
     assert settings.read_timeout_seconds == 90.0
 
+    assert settings.chat_temperature == 0.7
+    assert settings.chat_max_output_tokens == 1024
+
     rendered = repr(settings)
 
     assert "inference-secret" not in rendered

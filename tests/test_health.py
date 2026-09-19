@@ -13,5 +13,5 @@ def test_health_returns_backend_status() -> None:
     assert response.json() == {
         "status": "ok",
         "service": "mordred-backend",
-        "version": "0.2.0",
+        "version": "0.3.0",
     }
