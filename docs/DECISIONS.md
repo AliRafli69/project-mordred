@@ -1,6 +1,6 @@
 # Decision log
 
-Updated: 2026-09-14
+Updated: 2026-09-19
 
 Phase 0–2 decision identifiers are retained from the supplied archive. Deployment-specific values are omitted. Later decisions amend the project direction without rewriting historical intent.
 
@@ -57,3 +57,27 @@ Accepted; manual failure/recovery tested, backend handling pending. Use bounded 
 ## D-023 — Defer embedding architecture
 
 Accepted. Embedding location and retrieval stack will be selected in the document/RAG phases. Presence of an embedding model in the runtime does not select it for the project or verify embeddings.
+
+## D-024 — Restore Telegram as the first user-facing adapter
+
+Accepted. This supersedes the delivery-order portion of D-016. Telegram is the Phase 5 client and calls the backend rather than LM Studio directly. A browser interface is deferred.
+
+## D-025 — Keep inference control in the backend
+
+Accepted and implemented. Clients may supply a user message and optional conversation ID, but cannot select the model, replace the system prompt, enable reasoning, or override server limits.
+
+## D-026 — Separate public and private personality prompts
+
+Accepted and implemented. The reusable public prompt is committed. The private persona stays in an ignored, permission-restricted host file mounted as a runtime secret.
+
+## D-027 — Use bounded temporary context before persistence
+
+Accepted and implemented. Phase 4 history is isolated, bounded, and process-local. Failed inference does not append history. Restart loss is expected. PostgreSQL remains Phase 6.
+
+## D-028 — Require a separate backend credential
+
+Accepted and implemented. Chat and reset use a backend bearer credential distinct from the LM Studio token.
+
+## D-029 — Use an idempotent reset endpoint
+
+Accepted and implemented. Reset clears only the selected temporary conversation and succeeds when no history exists.

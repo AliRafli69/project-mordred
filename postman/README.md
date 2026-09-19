@@ -1,22 +1,28 @@
 # Postman practice
 
-The manually tested collection is named `Mordred`. Its actual export was not supplied with the source documents, so this package does not invent an exported collection or claim a reconstructed one was tested.
+Postman was used for direct LM Studio exercises in Phase 3 and Mordred backend acceptance checks in Phase 4. Real tokens, private addresses, private prompts, and saved private responses must not be committed.
 
-## Recorded setup
+## Phase 3
 
-| Setting | Value |
-| --- | --- |
-| Collection variable `base_url` | `http://127.0.0.1:1234` for same-computer tests |
-| Collection variable `model` | `qwen3.5-9b-uncensored-hauhaucs-aggressive` |
-| Bearer token field | `{{vault:mordred-lm-token}}` — reference only, never the secret |
-| List models | `GET {{base_url}}/v1/models` |
-| Model details | `GET {{base_url}}/api/v1/models` |
-| Native chat | `POST {{base_url}}/api/v1/chat` |
+Direct LM Studio tests covered model listing, model details, authenticated native chat, reasoning-off behavior, and missing-token rejection.
 
-The native reasoning-off test checked HTTP 200, expected model identity, non-empty answer content, and zero reasoning-output tokens. A missing token was also rejected during manual tests.
+## Phase 4 environment
 
-## Before committing an export
+| Variable | Example | Handling |
+| --- | --- | --- |
+| `base_url` | `http://127.0.0.1:18000` | Local end of an SSH tunnel |
+| `backend_api_key` | Not recorded | Secret environment value |
 
-Export the actual collection, then inspect its full JSON, including authorization, scripts, variables, descriptions, and saved response examples. Remove real credentials, private addresses, identity metadata, and personal prompts. Keep only placeholders and harmless practice inputs. Do not export Local Vault contents or private environments.
+The development computer forwarded local port 18000 to backend loopback port 8000 over SSH. Public documentation omits real usernames and hostnames.
 
-Local Vault protects the secret; it does not guarantee that collection content, examples, or other client data will never synchronize. Review client/workspace settings before using private notes in any request.
+## Acceptance sequence
+
+1. `GET {{base_url}}/health` returned HTTP 200.
+2. Authenticated `POST {{base_url}}/chat` started a harmless test conversation.
+3. A second request with the same conversation ID recalled its temporary codename.
+4. Authenticated `DELETE {{base_url}}/conversations/postman-conversation-a` returned reset status.
+5. The next request no longer recalled the codename.
+
+## Export safety
+
+Inspect variables, authorization, scripts, examples, and saved responses before committing an export. Remove tokens, private addresses, identities, and personal prompts. Never export secret environment values or Local Vault contents.

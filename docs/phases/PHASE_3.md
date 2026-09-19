@@ -1,6 +1,6 @@
 # Phase 3 — Local LLM setup and Postman basics
 
-Recorded: 2026-09-14  
+Recorded: 2026-09-14
 Status: core milestone complete
 
 ## Exit condition

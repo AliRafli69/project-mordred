@@ -1,36 +1,45 @@
 # Architecture
 
-Updated: 2026-09-14
+Updated: 2026-09-19
 
 ## Component placement
 
 | Component | Host | Status |
 | --- | --- | --- |
 | Secure administration and private networking | Ubuntu control server and Windows peer | Established |
-| LM Studio and chat model | Windows inference computer | Tested |
-| Postman | Windows development computer | Tested |
-| Custom backend API | Ubuntu control server | Phase 4 |
-| Browser interface hosting | Ubuntu control server | Phase 5 |
-| Documents and retrieval index | Ubuntu control server | Phases 6–7 |
-| Embedding generation | Undecided | Deferred |
+| LM Studio and chat model | Windows inference computer | Operational when available |
+| FastAPI backend | Ubuntu control server | Implemented in Phase 4 |
+| Public personality prompt | Repository and backend image | Implemented |
+| Private personality prompt | Ignored host file mounted as a Compose secret | Implemented |
+| Temporary conversation store | Backend process memory | Implemented and bounded |
+| Postman | Windows development computer | Verified through an SSH tunnel |
+| Telegram adapter | Ubuntu control server | Phase 5 |
+| PostgreSQL, tasks, and reminders | Ubuntu control server | Phase 6 |
+| Document retrieval and RAG | To be selected later | Deferred |
 
-## Request flow
+## Current request flow
 
-Currently, Postman on the inference computer and manual HTTP requests from the control server can reach LM Studio. The planned application flow is browser → control-server backend → private inference API. The backend, not the browser, will hold the inference credential.
+An authenticated client calls the FastAPI backend. The backend combines the public prompt, private prompt secret, and optional bounded conversation history, then calls LM Studio over the private network. The future Telegram bot will call this backend rather than LM Studio directly.
 
-LM Studio's local development base URL is `http://127.0.0.1:1234`. Cross-machine clients use the inference computer's private Tailscale address, intentionally omitted here. Loopback refers to the machine making the request; it is not the remote inference address.
+## Backend endpoints
 
-## Networking and authentication
+| Method | Endpoint | Authentication | Purpose |
+| --- | --- | --- | --- |
+| `GET` | `/health` | None | Confirm the backend process is running |
+| `GET` | `/ready` | None | Check LM Studio and model availability |
+| `POST` | `/chat` | Backend bearer key | Generate a response with optional temporary context |
+| `DELETE` | `/conversations/{conversation_id}` | Backend bearer key | Idempotently clear one temporary conversation |
 
-- Standard OpenSSH uses key authentication; Tailscale supplies its network transport, not a replacement for SSH authentication.
-- The Phase 2 record reports UFW default-deny inbound with explicitly allowed administrative paths. Those historical rules must be reviewed after network changes.
-- The Phase 3 Windows rule allows TCP port 1234 on the Tailscale interface, scoped to the control server's source address and inference computer's destination address.
-- LM Studio requires a bearer token. Network reachability alone does not grant API access.
-- LAN-serving mode must not be mistaken for Tailscale-only binding. Host firewall scope remains important, including other overlapping rules and IPv6 listeners.
-- No public forwarding or cloud-inference fallback is part of the design.
+Omitting `conversation_id` keeps a chat request stateless. Supplied IDs are validated and isolate bounded in-memory conversations.
 
-## Availability contract (planned backend behavior)
+## Prompt handling
 
-The inference computer may sleep, disconnect, or stop its model service. The backend must apply bounded connection and response timeouts, distinguish authentication errors from reachability failures, and return a clear unavailable response. It must not retry indefinitely or silently send prompts elsewhere. Recovery should be possible when the inference service returns.
+The public prompt is packaged with the backend. The private persona is ignored by Git and Docker build context, permission-restricted on the host, and mounted as a Compose secret. Prompt contents are not logged.
 
-Manual timeout and recovery checks were performed in Phase 3; application-level handling is not implemented yet.
+## Conversation behavior
+
+History is isolated by ID, bounded by message count and characters, appended only after successful inference, removable through reset, and lost on restart. It is not durable persistence and is not shared across multiple backend processes.
+
+## Availability and network boundaries
+
+The backend applies bounded connection/read timeouts and returns controlled errors for inference failures. It does not retry forever or silently use cloud inference. The deployed backend is loopback-bound; remote development uses SSH forwarding. LM Studio and the backend use separate bearer credentials.

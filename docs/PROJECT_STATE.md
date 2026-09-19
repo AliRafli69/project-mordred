@@ -1,51 +1,33 @@
 # Project state
 
-Updated: 2026-09-14  
-Current milestone: Phase 3 complete  
-Next phase: Phase 4 — backend API
+Updated: 2026-09-19
+Current milestone: Phase 4 complete
+Next phase: Phase 5 — Telegram adapter
 
-## Foundation inherited from Phase 2
+## Implemented backend
 
-The supplied Phase 2 record reports Ubuntu Server installation, key-only non-root SSH, restrictive UFW rules, Tailscale, unattended security updates, sensor and disk-health tooling, and disabled server suspend/hibernate. These are historical verification results, not a fresh audit of every setting in Phase 3.
+The Docker Compose-managed FastAPI backend provides `/health`, `/ready`, authenticated `/chat`, server-controlled model and personality configuration, bounded timeouts, controlled inference errors, optional bounded in-memory context, conversation isolation, stateless chat, and authenticated idempotent reset.
 
-Phase 3 re-established working SSH/private connectivity. Device identities, exact administrative rules, addresses, and raw health readings are deliberately excluded from this public record.
+## Configuration and secrets
 
-## Phase 3 configuration
+Public examples are committed in `.env.example`. Real `.env` values and the private personality prompt are ignored. The private prompt is mounted as a Compose secret and is not copied into the image.
 
-| Item | Recorded value |
-| --- | --- |
-| Inference OS | Windows 11 |
-| Inference RAM | 32 GB |
-| GPU | RTX 4060 Laptop GPU, 8,188 MiB VRAM |
-| NVIDIA driver observed | 591.86 |
-| Runtime | LM Studio 0.4.24 (Build 1), Stable channel |
-| Model | HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive |
-| API identifier | `qwen3.5-9b-uncensored-hauhaucs-aggressive` |
-| Format / quantization | GGUF / Q4_K_M |
-| Configured context | 4,096 tokens |
-| Tested native chat endpoint | `POST /api/v1/chat` |
-| Ordinary test request | Reasoning off, non-streaming |
+## Validation
 
-## Verified outcomes
+- Python compilation and Docker builds succeeded.
+- Final automated suite: 51 tests passed.
+- Backend container reported healthy.
+- Live chat reached LM Studio.
+- Same-conversation memory, cross-conversation isolation, reset, and post-reset forgetting were verified.
+- Postman repeated the backend checks through an SSH tunnel.
+- Commit `3fd1fbe` was published with a clean synchronized worktree.
 
-- Local chat generation and GPU activity during generation.
-- Authenticated Postman model listing and native chat generation.
-- Collection variables and four passing response tests.
-- Authenticated control-server model listing and chat generation over Tailscale.
-- Missing-token rejection by the inference API.
-- Connectivity over a relayed Tailscale path during the reported hotspot test; authenticated inference on that specific network was not separately recorded.
-- Bounded connection timeout followed by successful model-list recovery.
-- Temporary token removed from the test shell.
+## Intentional limitations
 
-See [Phase 3 validation](phases/PHASE_3.md) for observations and limitations.
+- Context is process-local, non-persistent, and lost on restart.
+- PostgreSQL, Telegram, tasks, reminders, scheduling, documents, retrieval, and citations are not implemented yet.
+- Inference is unavailable when the Windows GPU computer or LM Studio is unavailable.
 
-## Open items
+## Next work
 
-- Campus-network testing, sleep/wake testing, and startup automation.
-- Sustained-load performance and exact GPU layer offload measurement.
-- Audit effective listener/firewall exposure, overlapping rules, and unauthorized-peer access.
-- Recheck administrative firewall rules after network changes.
-- Confirm credential rotation if any token was entered directly into shell history; clearing a variable does not revoke a token or remove historical copies.
-- Define backend credential storage, timeouts, and log retention.
-- Review tailnet access policy/MFA and plan encrypted backups before importing valuable data.
-- Choose embedding placement and retrieval stack later. A downloaded embedding model is not an implemented RAG pipeline.
+Phase 5 adds a thin Telegram adapter with explicit user authorization, Telegram-to-backend conversation mapping, reset, and clear unavailable responses. PostgreSQL persistence, tasks, and reminders remain Phase 6.

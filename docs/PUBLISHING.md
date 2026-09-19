@@ -5,7 +5,7 @@
 - Rewrites the six supplied Phase 2 documents into a concise public baseline through Phase 3.
 - Removes administrator names, hostnames, private addresses/subnets, interface inventory, raw logs, transient disk/temperature readings, and personal network details.
 - Retains relevant architecture, security principles, decision IDs, model configuration, and measured test results.
-- Supersedes the old Telegram direction with the browser-chatbot and RAG roadmap.
+- Records the historical Phase 3 direction; later decisions restore Telegram as the Phase 5 adapter.
 - Adds a README, ignore rules, Phase 3 validation record, and Postman publication notes.
 
 The original archive is not part of the public package. No API token, model weight, personal note/PDF, or actual Postman export is included.

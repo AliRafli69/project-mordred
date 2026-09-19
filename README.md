@@ -1,18 +1,24 @@
 # Project Mordred
 
-A private, self-hosted study assistant built incrementally to learn API development, Postman, and retrieval-augmented generation (RAG).
+A private, self-hosted personal assistant built incrementally to learn backend API development, local LLM integration, Telegram bots, persistence, and retrieval-augmented generation (RAG).
 
 ## Status
 
-Phase 3 is complete: local model inference, authenticated API requests, Postman tests, and private server-to-inference connectivity have been demonstrated. The custom backend, browser chatbot, document retrieval, and cited answers are not implemented yet.
+Phase 4 is complete. The Ubuntu control server now runs a containerized FastAPI backend with health and readiness checks, authenticated chat, public/private personality assembly, controlled inference settings, bounded temporary conversation context, and authenticated conversation reset.
+
+The backend uses LM Studio on a separate Windows GPU computer over a private Tailscale path. Temporary context is held only in backend memory and disappears on restart.
+
+Phase 5 adds Telegram as the first user-facing adapter. Phase 6 adds PostgreSQL-backed persistence, tasks, and reminders. Document retrieval and RAG remain later work.
 
 ## Architecture
 
-- **Control server:** Ubuntu Server on an HP Pavilion; always-on host for the planned backend, browser interface, document storage, and retrieval index.
+- **Control server:** Ubuntu Server on an always-on HP Pavilion.
 - **Inference computer:** Windows on an ASUS ROG G14 with an RTX 4060 Laptop GPU; runs LM Studio and may sleep or disconnect.
-- **Private connection:** Tailscale, with host firewall restrictions and API authentication.
+- **Private transport:** Tailscale, host firewalls, and separate API credentials.
+- **Current clients:** Postman and authenticated HTTP clients.
+- **Next client:** Telegram bot adapter.
 
-The control server must tolerate unavailable inference. There is no automatic cloud-inference fallback. Embedding placement remains undecided.
+The backend owns inference credentials, personality assembly, generation limits, conversation bounds, and error translation. Clients cannot supply their own model or system prompt.
 
 ## Documentation
 
@@ -23,7 +29,8 @@ The control server must tolerate unavailable inference. There is no automatic cl
 - [Decision log](docs/DECISIONS.md)
 - [Current state](docs/PROJECT_STATE.md)
 - [Phase 3 validation](docs/phases/PHASE_3.md)
+- [Phase 4 validation](docs/phases/PHASE_4.md)
 - [Postman practice](postman/README.md)
 - [Publication checklist](docs/PUBLISHING.md)
 
-This repository contains public project documentation, not deployment credentials or private study material. It does not bundle model weights or a working application. Model licensing is separate from repository content.
+This public repository excludes deployment credentials, private personality text, private addresses, personal documents, saved conversations, and model weights.
