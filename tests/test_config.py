@@ -17,6 +17,9 @@ def test_settings_validate_and_mask_secrets() -> None:
     assert settings.chat_temperature == 0.7
     assert settings.chat_max_output_tokens == 1024
 
+    assert settings.conversation_max_messages == 12
+    assert settings.conversation_max_characters == 24_000
+
     rendered = repr(settings)
 
     assert "inference-secret" not in rendered

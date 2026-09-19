@@ -23,6 +23,18 @@ class Settings(BaseSettings):
     chat_temperature: float = Field(default=0.7, ge=0.0, le=2.0)
     chat_max_output_tokens: int = Field(default=1024, ge=64, le=4096)
 
+    conversation_max_messages: int = Field(
+        default=12,
+        ge=2,
+        le=100,
+        multiple_of=2,
+    )
+    conversation_max_characters: int = Field(
+        default=24_000,
+        ge=1_000,
+        le=200_000,
+    )
+
     connect_timeout_seconds: float = Field(default=3.0, gt=0, le=30)
     read_timeout_seconds: float = Field(default=90.0, gt=0, le=600)
 

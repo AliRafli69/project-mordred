@@ -5,7 +5,7 @@ from collections.abc import Callable
 import httpx
 import pytest
 
-from app.chat import LMStudioChatClient
+from app.chat import LMStudioChatClient, build_chat_input
 from app.config import Settings
 from app.inference import (
     InferenceAuthenticationError,
@@ -28,6 +28,34 @@ def make_client(
 
     return LMStudioChatClient(settings=settings, transport=transport)
 
+def test_build_chat_input_preserves_stateless_compatibility() -> None:
+    assert build_chat_input(
+        history=(),
+        user_input="Hello.",
+    ) == "Hello."
+
+def test_build_chat_input_includes_bounded_history() -> None:
+    from app.conversations import ConversationMessage
+
+    chat_input = build_chat_input(
+        history=(
+            ConversationMessage(
+                role="user",
+                content="My codename is Cerberus.",
+            ),
+            ConversationMessage(
+                role="assistant",
+                content="Understood.",
+            ),
+        ),
+        user_input="What codename did I give you?",
+    )
+
+    assert '"role": "user"' in chat_input
+    assert "My codename is Cerberus." in chat_input
+    assert '"role": "assistant"' in chat_input
+    assert "Understood." in chat_input
+    assert "What codename did I give you?" in chat_input
 
 def test_generate_sends_server_controlled_chat_request() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
