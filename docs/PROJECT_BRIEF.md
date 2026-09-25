@@ -1,6 +1,6 @@
 # Project brief
 
-Updated: 2026-09-19
+Updated: 2026-09-25
 
 ## Purpose
 
@@ -27,6 +27,6 @@ Build a private, self-hosted personal assistant named Mordred using an always-on
 
 ## Current boundary
 
-Phase 4 provides the backend, temporary context, reset behavior, prompt assembly, authentication, and failure handling. Phase 5 adds Telegram. Phase 6 adds PostgreSQL-backed persistence, tasks, and reminders. RAG remains later work.
+Phase 4 provides the backend, temporary context, reset behavior, prompt assembly, authentication, and failure handling. Phase 5 provides an allowlisted, private-chat-only Telegram adapter. Phase 6 adds PostgreSQL-backed persistence, tasks, and reminders. RAG remains later work. Local inference does not make Telegram message transport local.
 
 Public documentation excludes credentials, private prompts, private addresses, personal conversations, documents, and raw operational logs.
