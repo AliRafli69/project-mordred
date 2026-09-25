@@ -13,20 +13,28 @@ class PromptConfigurationError(RuntimeError):
 def read_prompt(path: Path, *, required: bool) -> str:
     """Read one bounded UTF-8 prompt without logging its contents."""
 
-    if not path.is_file():
-        if required:
-            raise PromptConfigurationError(f"Required prompt is missing: {path.name}")
-
-        return ""
-
-    if path.stat().st_size > MAX_PROMPT_BYTES:
-        raise PromptConfigurationError(f"Prompt is too large: {path.name}")
-
     try:
+        if not path.is_file():
+            if required:
+                raise PromptConfigurationError(
+                    f"Required prompt is missing: {path.name}"
+                )
+
+            return ""
+
+        if path.stat().st_size > MAX_PROMPT_BYTES:
+            raise PromptConfigurationError(
+                f"Prompt is too large: {path.name}"
+            )
+
         prompt = path.read_text(encoding="utf-8").strip()
     except UnicodeDecodeError as exc:
         raise PromptConfigurationError(
             f"Prompt is not valid UTF-8: {path.name}"
+        ) from exc
+    except OSError as exc:
+        raise PromptConfigurationError(
+            f"Prompt cannot be read: {path.name}"
         ) from exc
 
     if required and not prompt:

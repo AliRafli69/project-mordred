@@ -1,6 +1,6 @@
 # Decision log
 
-Updated: 2026-09-19
+Updated: 2026-09-25
 
 Phase 0–2 decision identifiers are retained from the supplied archive. Deployment-specific values are omitted. Later decisions amend the project direction without rewriting historical intent.
 
@@ -81,3 +81,11 @@ Accepted and implemented. Chat and reset use a backend bearer credential distinc
 ## D-029 — Use an idempotent reset endpoint
 
 Accepted and implemented. Reset clears only the selected temporary conversation and succeeds when no history exists.
+
+## D-030 — Use a thin Telegram polling adapter
+
+Accepted and implemented. Run the adapter as a separate Compose service without an inbound port. Restrict it to explicitly allowed Telegram user IDs in private chats, then call the existing authenticated backend. Process updates sequentially to preserve chat/reset order; do not blindly retry chat after an uncertain result.
+
+## D-031 — Defer Telegram update persistence
+
+Accepted for Phase 5. Keep polling offsets in process memory and consume handled updates even if reply delivery fails. A crash after backend success but before offset confirmation can cause redelivery. Durable update tracking and idempotency storage are deferred rather than introduced in this phase.

@@ -1,6 +1,6 @@
 # Roadmap
 
-Updated: 2026-09-19
+Updated: 2026-09-25
 
 | Phase | Scope | Exit condition | Status |
 | --- | --- | --- | --- |
@@ -9,7 +9,7 @@ Updated: 2026-09-19
 | 2 | SSH, security, and reliability | Key authentication, firewall, Tailscale, updates, health tooling, and power behavior checked | Complete per Phase 2 record |
 | 3 | Local LLM and API practice | Local inference, authenticated API tests, private cross-host requests, and recovery checks demonstrated | Complete |
 | 4 | Backend and temporary context | Authenticated backend chat, prompt separation, readiness/error handling, bounded context, reset, automated tests, and Postman validation | Complete |
-| 5 | Telegram adapter | Authorized Telegram user can chat, retain temporary context, reset it, and receive unavailable responses | Next |
+| 5 | Telegram adapter | Authorized Telegram user can chat, retain temporary context, reset it, and receive unavailable responses | Complete; see Phase 5 record |
 | 6 | PostgreSQL, tasks, and reminders | Durable storage, migrations, task lifecycle, reminder delivery, restart recovery, and backup/restore tested | Planned |
 | 7 | Document ingestion and retrieval | Notes/PDFs indexed with source metadata and retrieval evaluated | Planned |
 | 8 | RAG and citations | Answers grounded in retrieved passages with verifiable citations | Planned |
